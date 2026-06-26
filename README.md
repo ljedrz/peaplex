@@ -1,5 +1,9 @@
 # peaplex
 
+[![Crates.io](https://img.shields.io/crates/v/peaplex.svg)](https://crates.io/crates/peaplex)
+[![Documentation](https://docs.rs/peaplex/badge.svg)](https://docs.rs/peaplex)
+[![dependency status](https://deps.rs/repo/github/ljedrz/peaplex/status.svg)](https://deps.rs/repo/github/ljedrz/peaplex)
+
 A minimal, zero-copy stream multiplexer that runs on top of any
 `AsyncRead + AsyncWrite` connection.
 
@@ -7,6 +11,24 @@ A single duplex connection between two peers carries a peaplex session.
 That session exposes an arbitrary number of independent, ordered,
 full-duplex **substreams** that look like `tokio::io` byte streams and
 can be plugged into anything that takes one.
+
+---
+
+### 📖 Table of Contents
+
+- [At a glance](#at-a-glance)
+- [Wire format](#wire-format)
+- [Usage](#usage)
+- [How it fits together](#how-it-fits-together)
+- [Two ways to use it](#two-ways-to-use-it)
+- [Flow control and backpressure](#flow-control-and-backpressure)
+- [Performance](#performance)
+- [Limitations](#limitations)
+- [Interoperability](#interoperability)
+- [License](#license)
+- [Peapod](#-peapod)
+
+---
 
 ## At a glance
 
