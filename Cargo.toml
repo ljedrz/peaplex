@@ -3,12 +3,15 @@ name = "peaplex"
 version = "0.1.0"
 authors = ["ljedrz <ljedrz@gmail.com>"]
 edition = "2024"
-rust-version = "1.88"
 description = "A profoundly minimal, zero-copy stream multiplexer for any AsyncRead + AsyncWrite connection."
 license = "CC0-1.0 OR MIT"
 repository = "https://github.com/ljedrz/peaplex"
-keywords = ["mplex", "multiplexer", "p2p", "networking", "zero-copy"]
+homepage = "https://github.com/ljedrz/peaplex"
+documentation = "https://docs.rs/peaplex"
+readme = "README.md"
 categories = ["network-programming", "asynchronous"]
+keywords = ["mplex", "multiplexer", "p2p", "networking", "zero-copy"]
+rust-version = "1.88"
 
 [dependencies]
 bytes = "1"
