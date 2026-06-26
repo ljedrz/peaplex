@@ -223,3 +223,18 @@ peaplex (and pick opposite `Side` values).
 ## License
 
 Dual-licensed under CC0-1.0 or MIT, at your option.
+
+## 🫛 Peapod
+
+This library is part of the Peapod: a collection of small, composable Rust libraries for building robust peer-to-peer systems.
+
+| Library | Purpose |
+| ------- | ------- |
+| `pea2pea` | Lightweight P2P networking primitive |
+| `peashape` | Traffic shaping |
+| `peaveil` | Privacy-oriented peer discovery |
+| `peasub` | Metadata-private dissemination |
+| `peaplex` | Optional stream multiplexing |
+| `peaboard` | Reference application |
+
+Each library does one thing well and composes naturally with the others.
