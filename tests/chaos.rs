@@ -102,14 +102,22 @@ fn make_payload(seed: u64, total_len: usize) -> Vec<u8> {
 
 /// Verify `received` is a byte-correct prefix of the payload its header
 /// describes. Returns the intended total length. Panics on any mismatch.
-fn verify_prefix(received: &[u8]) -> usize {
-    assert!(
-        received.len() >= HDR || received.is_empty(),
-        "stream delivered {} bytes - not enough for a header and not empty",
-        received.len()
-    );
+///
+/// `torn` indicates whether the session was deliberately torn down
+/// mid-flight. A torn session may legitimately deliver a partial
+/// header (the connection was closed before the first 12 bytes of the
+/// payload reached the reader); a clean one must not.
+fn verify_prefix(received: &[u8], torn: bool) -> usize {
     if received.is_empty() {
         return 0;
+    }
+    if received.len() < HDR {
+        assert!(
+            torn,
+            "clean session delivered {} bytes - less than a header",
+            received.len()
+        );
+        return received.len();
     }
     let seed = u64::from_be_bytes(received[0..8].try_into().unwrap());
     let total_len = u32::from_be_bytes(received[8..12].try_into().unwrap()) as usize;
@@ -250,7 +258,7 @@ async fn run_session(seed: u64, torn: bool) {
 
     // Integrity oracle: every delivered stream is a correct prefix.
     for buf in ra.iter().chain(rb.iter()) {
-        let total = verify_prefix(buf);
+        let total = verify_prefix(buf, torn);
         if !torn {
             assert_eq!(buf.len(), total, "clean session delivered a short stream");
         }
