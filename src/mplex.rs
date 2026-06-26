@@ -22,9 +22,9 @@ use tokio::{
 use tokio_util::codec::{Decoder, Encoder};
 
 use crate::{
+    Flag, Frame, FrameCodec, Stream, StreamId,
     frame::FRAME_HEADER_LEN,
     stream::{IncomingState, IncomingStateHandle},
-    Flag, Frame, FrameCodec, Stream, StreamId,
 };
 
 /// Which side of the underlying connection this `Multiplexer` is.
@@ -156,8 +156,7 @@ where
             }
             let id = StreamId(state.next_id);
             state.next_id = state.next_id.wrapping_add(2);
-            let incoming: IncomingStateHandle =
-                Arc::new(Mutex::new(IncomingState::default()));
+            let incoming: IncomingStateHandle = Arc::new(Mutex::new(IncomingState::default()));
             state.streams.insert(id, incoming.clone());
             (id, incoming)
         };
@@ -274,8 +273,7 @@ impl MultiplexerInner {
                     return (Vec::new(), None);
                 }
                 let id = frame.stream_id;
-                let incoming: IncomingStateHandle =
-                    Arc::new(Mutex::new(IncomingState::default()));
+                let incoming: IncomingStateHandle = Arc::new(Mutex::new(IncomingState::default()));
                 state.streams.insert(id, incoming.clone());
                 let stream = Stream {
                     inner: self.clone(),
@@ -315,13 +313,12 @@ impl MultiplexerInner {
                 // back via `Multiplexer::goaway_reason`. A short/garbled
                 // payload leaves the reason as `None`.
                 if frame.payload.len() >= 4 {
-                    state.goaway_reason =
-                        Some(u32::from_be_bytes([
-                            frame.payload[0],
-                            frame.payload[1],
-                            frame.payload[2],
-                            frame.payload[3],
-                        ]));
+                    state.goaway_reason = Some(u32::from_be_bytes([
+                        frame.payload[0],
+                        frame.payload[1],
+                        frame.payload[2],
+                        frame.payload[3],
+                    ]));
                 }
                 let mut wakers = Vec::new();
                 for (_, incoming) in state.streams.drain() {

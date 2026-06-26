@@ -3,9 +3,9 @@
 
 use std::time::Duration;
 
-use peaplex::{FrameCodec, Multiplexer, Side, StreamId, FLAG_CLOSE, FLAG_DATA};
+use peaplex::{FLAG_CLOSE, FLAG_DATA, FrameCodec, Multiplexer, Side, StreamId};
 use tokio::{
-    io::{duplex, AsyncReadExt, AsyncWriteExt},
+    io::{AsyncReadExt, AsyncWriteExt, duplex},
     time::timeout,
 };
 
@@ -59,7 +59,10 @@ async fn bidirectional_streams() {
     s_ab.write_all(b"from a to b").await.unwrap();
     drop(s_ab);
     assert_eq!(
-        timeout(Duration::from_secs(5), b_reader).await.unwrap().unwrap(),
+        timeout(Duration::from_secs(5), b_reader)
+            .await
+            .unwrap()
+            .unwrap(),
         b"from a to b"
     );
 
@@ -75,7 +78,10 @@ async fn bidirectional_streams() {
     s_ba.write_all(b"from b to a").await.unwrap();
     drop(s_ba);
     assert_eq!(
-        timeout(Duration::from_secs(5), a_reader).await.unwrap().unwrap(),
+        timeout(Duration::from_secs(5), a_reader)
+            .await
+            .unwrap()
+            .unwrap(),
         b"from b to a"
     );
 }
@@ -115,7 +121,9 @@ async fn many_concurrent_streams() {
         .await
         .unwrap()
         .unwrap();
-    let mut expected: Vec<Vec<u8>> = (0..N).map(|i| format!("stream #{i}").into_bytes()).collect();
+    let mut expected: Vec<Vec<u8>> = (0..N)
+        .map(|i| format!("stream #{i}").into_bytes())
+        .collect();
     let mut got = received;
     expected.sort();
     got.sort();

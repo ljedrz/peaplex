@@ -19,10 +19,9 @@ use std::{
 
 use parking_lot::Mutex;
 use pea2pea::{
-    Config, Node, Pea2Pea,
+    Config, ConnectionSide, Node, Pea2Pea,
     connections::DisconnectOrigin,
     protocols::{OnDisconnect, Reading, Writing},
-    ConnectionSide,
 };
 use peaplex::{Flag, Frame, FrameCodec, StreamId};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
@@ -130,7 +129,12 @@ struct Stream {
 }
 
 impl Stream {
-    fn new(node: MplexedNode, peer: SocketAddr, id: StreamId, state: Arc<Mutex<SubstreamState>>) -> Self {
+    fn new(
+        node: MplexedNode,
+        peer: SocketAddr,
+        id: StreamId,
+        state: Arc<Mutex<SubstreamState>>,
+    ) -> Self {
         Self {
             node,
             peer,
@@ -243,11 +247,7 @@ impl Reading for MplexedNode {
 impl MplexedNode {
     /// Synchronous dispatch for [`Reading::process_message`]. Returns the
     /// read and accept wakers to fire after the state lock is released.
-    fn dispatch(
-        &self,
-        source: SocketAddr,
-        message: Frame,
-    ) -> (Vec<Waker>, Option<Waker>) {
+    fn dispatch(&self, source: SocketAddr, message: Frame) -> (Vec<Waker>, Option<Waker>) {
         let mut s = self.state.lock();
         match message.flag {
             Flag::Open => {
@@ -390,7 +390,10 @@ async fn main() -> io::Result<()> {
     // Wait for the connection to show up on both sides.
     for _ in 0..200 {
         if dialer_node.is_connected(listener_addr)
-            && listener_node.connected_addrs().iter().any(|a| a.ip() == listener_addr.ip())
+            && listener_node
+                .connected_addrs()
+                .iter()
+                .any(|a| a.ip() == listener_addr.ip())
         {
             break;
         }
@@ -409,7 +412,11 @@ async fn main() -> io::Result<()> {
         for mut s in streams {
             let mut buf = Vec::new();
             s.read_to_end(&mut buf).await.unwrap();
-            println!("listener: read {} bytes: {:?}", buf.len(), String::from_utf8_lossy(&buf));
+            println!(
+                "listener: read {} bytes: {:?}",
+                buf.len(),
+                String::from_utf8_lossy(&buf)
+            );
         }
     });
 

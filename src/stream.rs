@@ -12,7 +12,7 @@ use bytes::{Buf, Bytes};
 use parking_lot::Mutex;
 use tokio::io::{AsyncRead, AsyncWrite, ReadBuf};
 
-use crate::{frame::MAX_FRAME_PAYLOAD, mplex::MultiplexerInner, Frame, StreamId};
+use crate::{Frame, StreamId, frame::MAX_FRAME_PAYLOAD, mplex::MultiplexerInner};
 
 /// Per-substream incoming state shared between the drive task and the
 /// user-facing [`Stream`] handle.

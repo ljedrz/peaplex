@@ -108,8 +108,8 @@ mod mplex;
 mod stream;
 
 pub use frame::{
-    Flag, Frame, FrameCodec, StreamId, FLAG_CLOSE, FLAG_DATA, FLAG_GOAWAY, FLAG_OPEN,
-    FRAME_HEADER_LEN, MAX_FRAME_PAYLOAD,
+    FLAG_CLOSE, FLAG_DATA, FLAG_GOAWAY, FLAG_OPEN, FRAME_HEADER_LEN, Flag, Frame, FrameCodec,
+    MAX_FRAME_PAYLOAD, StreamId,
 };
 pub use mplex::{Accept, Multiplexer, Side};
 pub use stream::Stream;

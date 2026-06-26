@@ -21,7 +21,7 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use bytes::{BufMut, BytesMut};
 use peaplex::{Frame, FrameCodec, Multiplexer, Side, StreamId};
 use tokio::{
-    io::{duplex, AsyncReadExt, AsyncWriteExt, DuplexStream},
+    io::{AsyncReadExt, AsyncWriteExt, DuplexStream, duplex},
     time::timeout,
 };
 use tokio_util::codec::{Decoder, Encoder};
@@ -355,7 +355,9 @@ async fn garbage_on_the_wire_wakes_readers() {
     // Let the reader register, then send a frame with an unknown flag byte,
     // which the decoder rejects with an error.
     tokio::time::sleep(Duration::from_millis(20)).await;
-    peer.write_all(&[0xFF, 0, 0, 0, 1, 0, 0, 0, 0]).await.unwrap();
+    peer.write_all(&[0xFF, 0, 0, 0, 1, 0, 0, 0, 0])
+        .await
+        .unwrap();
 
     let n = timeout(Duration::from_secs(5), reader)
         .await
